@@ -1,0 +1,115 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Indicates what fields are available at the top level of a query operation."
+type Query {
+    "Find a single user by an identifying attribute."
+    user(
+      "Search by primary key."
+      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+
+      "Search by email address."
+      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
+    ): User @find
+
+    "List multiple users."
+    users(
+      "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
+      name: String @where(operator: "like")
+    ): [User!]! @paginate(defaultCount: 10)
+
+    employees: [Employee!]! @paginate
+    employee(id: ID @eq) : Employee @find
+}
+
+type Mutation {
+  createEmployee(
+    Employees: String!
+    Location: String!
+    Email: String!
+    Phone: String!
+    Department: String!
+    EmployeeCode: String!
+    CustomTags: String!
+    Positions: String!
+    NRC: String!
+    Manager: String!
+    ManagerPosition: String!
+    JoinnedDate: String!
+    TerminateDate: DateTime!
+    created_at: String!
+    updated_at: String!
+  ) : Employee @create
+
+  updateEmployeeDepartment(
+    id: ID!
+    Department: String!
+  ) : Employee @update
+ 
+}
+
+
+
+"Account of a person who utilizes this application."
+type User {
+    "Unique primary key."
+    id: ID!
+
+    "Non-unique name."
+    name: String!
+
+    "Unique email address."
+    email: String!
+
+    "When the email was verified."
+    email_verified_at: DateTime
+
+    "When the account was created."
+    created_at: DateTime!
+
+    "When the account was last updated."
+    updated_at: DateTime!
+}
+"Employee in application"
+type Employee {
+    "Unique primary key."
+    id: ID!
+
+    "Non-unique name."
+    Employees: String!
+
+    "Unique email address."
+    Location: String!
+
+    "When the email was verified."
+    Email: String!
+
+    "phone."
+    Phone: String!
+
+    "Department."
+    Department: String!
+
+    "phone."
+    EmployeeCode: String!
+
+    CustomTags: String!
+
+    Positions: String!
+
+    NRC: String!
+
+    Manager: String!
+
+    ManagerPosition: String!
+
+    JoinnedDate: DateTime!
+
+    TerminateDate: DateTime!
+
+    "When the account was created."
+    created_at: DateTime!
+
+    "When the account was last updated."
+    updated_at: DateTime!
+}
